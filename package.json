@@ -1,0 +1,17 @@
+{
+  "name": "@koi/workspace",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "components",
+    "playground"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w playground",
+    "build": "npm run build -w components",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10"
+  }
+}

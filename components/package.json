@@ -1,0 +1,41 @@
+{
+  "name": "@sean0x42/koi",
+  "version": "0.1.0",
+  "description": "Components from the koi design system",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    "./forms": {
+      "types": "./dist/forms/index.d.ts",
+      "import": "./dist/forms/index.js"
+    },
+    "./layout": {
+      "types": "./dist/layout/index.d.ts",
+      "import": "./dist/layout/index.js"
+    },
+    "./prose": {
+      "types": "./dist/prose/index.d.ts",
+      "import": "./dist/prose/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tcm -a src && concurrently -k \"tsc --watch\" \"tcm -a -w src\" \"node copy-css.mjs --watch\"",
+    "build": "tcm -a src && tsc && node copy-css.mjs"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "chokidar": "^3.6.0",
+    "concurrently": "^10.0.7",
+    "react": "^19.3.1",
+    "typed-css-modules": "^0.9.1",
+    "typescript": "^7.0.2"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  }
+}
