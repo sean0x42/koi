@@ -2,6 +2,10 @@
   "name": "@sean0x42/koi",
   "version": "0.1.0",
   "description": "Components from the koi design system",
+  "repository": "git+https://github.com/sean0x42/koi.git",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "files": [
     "dist"
   ],
@@ -10,6 +14,16 @@
     "**/*.css"
   ],
   "exports": {
+    "./base.css": {
+      "import": "./dist/base.css"
+    },
+    "./reset.css": {
+      "import": "./dist/reset.css"
+    },
+    "./button": {
+      "types": "./dist/button.d.ts",
+      "import": "./dist/button.js"
+    },
     "./forms": {
       "types": "./dist/forms/index.d.ts",
       "import": "./dist/forms/index.js"
@@ -24,8 +38,9 @@
     }
   },
   "scripts": {
-    "dev": "tcm -a src && concurrently -k \"tsc --watch\" \"tcm -a -w src\" \"node copy-css.mjs --watch\"",
-    "build": "tcm -a src && tsc && node copy-css.mjs"
+    "build:tcm": "tcm -a -p '**/*.module.css' src",
+    "dev": "concurrently -k \"tsc --watch\" \"npm run build:tcm -- -w\" \"node copy-css.mjs --watch\"",
+    "build": "npm run build:tcm && tsc && node copy-css.mjs"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",

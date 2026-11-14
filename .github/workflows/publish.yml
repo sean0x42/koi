@@ -1,0 +1,87 @@
+name: Publish package
+
+on:
+  push:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: "@sean0x42"
+
+      - run: npm ci
+
+      - name: Calculate package version
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          name="$(node -p "require('./components/package.json').name")"
+          base_version="$(node -p "require('./components/package.json').version")"
+
+          if [[ ! "$base_version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "components/package.json version must be a stable x.y.z version; got '$base_version'" >&2
+            exit 1
+          fi
+
+          if [[ "$GITHUB_REF_NAME" == "main" ]]; then
+            version="$base_version"
+            tag=latest
+          else
+            branch="$(printf '%s' "$GITHUB_REF_NAME" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9-' '-')"
+            version="${base_version}-${branch}.${GITHUB_RUN_NUMBER}"
+            tag=preview
+          fi
+
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Publishing candidate: $name@$version (dist-tag: $tag)"
+
+      - name: Check whether version is already published
+        id: published
+        shell: bash
+        env:
+          PACKAGE_NAME: ${{ steps.package.outputs.name }}
+          PACKAGE_VERSION: ${{ steps.package.outputs.version }}
+        run: |
+          set -euo pipefail
+          if output="$(npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version --json --registry=https://npm.pkg.github.com 2>&1)"; then
+            echo "${PACKAGE_NAME}@${PACKAGE_VERSION} is already published; skipping."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            status=$?
+            if [[ "$output" == *E404* ]]; then
+              echo "publish=true" >> "$GITHUB_OUTPUT"
+            else
+              printf '%s\n' "$output" >&2
+              exit "$status"
+            fi
+          fi
+
+      - name: Build components
+        run: npm run build --workspace components
+
+      - name: Set preview version
+        if: steps.published.outputs.publish == 'true' && steps.package.outputs.tag == 'preview'
+        run: npm version "${{ steps.package.outputs.version }}" --workspace components --no-git-tag-version
+
+      - name: Publish to GitHub Packages
+        if: steps.published.outputs.publish == 'true'
+        env:
+          PACKAGE_TAG: ${{ steps.package.outputs.tag }}
+        run: npm publish --workspace components --tag "$PACKAGE_TAG" --registry=https://npm.pkg.github.com

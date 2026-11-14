@@ -1,9 +1,9 @@
 import type { CSSProperties, ElementType } from "react";
-import type { PolymorphicProps } from "../lib/props.js";
+import type { PolymorphicProps } from "../lib/props.ts";
 import styles from "./box.module.css";
-import { merge } from "../lib/class-name.js";
-import { space, type Space } from "../lib/space.js";
-import { color, type Color } from "../lib/color.js";
+import { merge } from "../lib/class-name.ts";
+import { space, type Space } from "../lib/space.ts";
+import { color, type Color } from "../lib/color.ts";
 
 export interface BoxOwnProps {
   className?: string;

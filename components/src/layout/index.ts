@@ -1,3 +1,3 @@
-export { Box, Inline, Stack, type BoxProps } from "./box";
-export { Container, type ContainerProps } from "./container";
-export { Grid, type GridProps } from "./grid";
+export { Box, Inline, Stack, type BoxProps } from "./box.ts";
+export { Container, type ContainerProps } from "./container.ts";
+export { Grid, type GridProps } from "./grid.ts";

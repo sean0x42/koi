@@ -7,7 +7,7 @@
     "playground"
   ],
   "scripts": {
-    "dev": "npm run dev -w playground",
+    "dev": "concurrently -k \"npm run dev -w playground\" \"npm run dev -w components\"",
     "build": "npm run build -w components",
     "format": "prettier --write ."
   },

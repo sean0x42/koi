@@ -1,0 +1,10 @@
+.label {
+  font-weight: 600;
+}
+
+.helpLabel {
+}
+
+.errorLabel {
+  color: red;
+}

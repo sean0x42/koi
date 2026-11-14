@@ -1,8 +1,8 @@
 import type { ElementType } from "react";
-import type { PolymorphicProps } from "../lib/props";
+import type { PolymorphicProps } from "../lib/props.ts";
 import styles from "./container.module.css";
-import { Box, type BoxOwnProps, type BoxProps } from "./box";
-import { merge } from "../lib/class-name";
+import { Box, type BoxOwnProps, type BoxProps } from "./box.ts";
+import { merge } from "../lib/class-name.ts";
 
 interface ContainerOwnProps extends BoxOwnProps {
   width?: "default" | "prose";

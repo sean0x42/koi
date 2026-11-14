@@ -1,8 +1,8 @@
 import type { ElementType } from "react";
-import type { PolymorphicProps } from "../lib/props";
+import type { PolymorphicProps } from "../lib/props.ts";
 import styles from "./grid.module.css";
-import { Box, type BoxOwnProps, type BoxProps } from "./box";
-import { merge } from "../lib/class-name";
+import { Box, type BoxOwnProps, type BoxProps } from "./box.ts";
+import { merge } from "../lib/class-name.ts";
 
 interface GridOwnProps extends BoxOwnProps {
   columns: number;
