@@ -11,7 +11,3 @@ Consumers need to configure npm to use GitHub Packages for this scope:
 ```ini
 @sean0x42:registry=https://npm.pkg.github.com
 ```
-
-## Polymorphic links
-
-`Link` renders an `<a>` by default. Pass `as` to render through another element component (for example, `next/link`); the value is consumed as the element type, not forwarded to the DOM.

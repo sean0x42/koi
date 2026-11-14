@@ -13,6 +13,7 @@ import { Stack } from "../layout/box.ts";
 
 export interface InputProps {
   id: string;
+  name: string | undefined;
   "aria-describedby": string | undefined;
   "aria-invalid": "true" | "false" | undefined;
   "aria-errormessage": string | undefined;
@@ -28,12 +29,14 @@ export const getHelpId = (id: string) => `${id}-help`;
 export const getErrorId = (id: string) => `${id}-error`;
 
 export interface FormControlProps extends PropsWithChildren {
+  name?: string;
   label: ReactNode;
   help?: ReactNode;
   error?: ReactNode;
 }
 
 export const FormControl: FC<FormControlProps> = ({
+  name,
   label,
   help,
   error,
@@ -53,6 +56,7 @@ export const FormControl: FC<FormControlProps> = ({
       <InputPropsContext
         value={{
           id,
+          name,
           "aria-describedby": helpId,
           "aria-invalid": error !== undefined ? "true" : undefined,
           "aria-errormessage": errorId,
